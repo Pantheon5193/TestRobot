@@ -16,5 +16,5 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    int gyroAngle = 180;
+    int gyroAngle = 90;
 }
