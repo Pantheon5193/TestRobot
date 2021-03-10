@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,11 +26,11 @@ public class DriveTrain extends SubsystemBase {
   private WPI_VictorSPX bL = new WPI_VictorSPX(5);
   private WPI_VictorSPX bR = new WPI_VictorSPX(6);
 
-  public void setPower(double leftP, double rightP){
-    fL.set(leftP);
-    fR.set(rightP);
-    bL.set(leftP);
-    bR.set(rightP);
+  public void setPower(DoubleSupplier leftP, DoubleSupplier rightP){
+    fL.set(leftP.getAsDouble());
+    fR.set(rightP.getAsDouble());
+    bL.set(leftP.getAsDouble());
+    bR.set(rightP.getAsDouble());
   }
 
   @Override
