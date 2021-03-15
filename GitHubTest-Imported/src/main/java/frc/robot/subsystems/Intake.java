@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,6 +24,7 @@ public class Intake extends SubsystemBase {
 
   private WPI_VictorSPX Intake1 = new WPI_VictorSPX(4);
   private WPI_VictorSPX Intake2 = new WPI_VictorSPX(1);
+  private DigitalInput input1 = new DigitalInput(8);
 
   public void setPowerIntake1(DoubleSupplier firstP){
     Intake1.set(firstP.getAsDouble());
@@ -30,6 +32,10 @@ public class Intake extends SubsystemBase {
 
   public void setPowerIntake2(DoubleSupplier secondP){
     Intake2.set(secondP.getAsDouble());
+  }
+
+  public boolean input(){
+    return input1.get();
   }
 
   @Override

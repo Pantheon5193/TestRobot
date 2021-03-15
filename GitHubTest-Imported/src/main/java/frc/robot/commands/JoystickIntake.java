@@ -12,6 +12,8 @@ import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 /**
  * An example command that uses an example subsystem.
@@ -19,7 +21,8 @@ import java.util.function.DoubleSupplier;
 public class JoystickIntake extends CommandBase {
 private Intake m_Intake;
 private DoubleSupplier firstP;
-private int isPressed;
+private BooleanSupplier isPressed;
+private BooleanSupplier isPressed2;
 
 
 /**
@@ -27,10 +30,11 @@ private int isPressed;
    *
    * @param subsystem The subsystem used by this command.
    */
-  public JoystickIntake(Intake subsystem, DoubleSupplier power1, int pressed) {
+  public JoystickIntake(Intake subsystem, DoubleSupplier power1, BooleanSupplier pressed, BooleanSupplier pressed2) {
     m_Intake = subsystem;
     firstP = power1;
     isPressed=pressed;
+    isPressed2 = pressed2;
     addRequirements(subsystem);
   }
 
@@ -42,11 +46,25 @@ private int isPressed;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  m_Intake.setPowerIntake1(firstP);
-  SmartDashboard.putNumber("Pressed", isPressed);
-  if(isPressed==1){
-    m_Intake.setPowerIntake2(() -> .3);
+  if(isPressed2.getAsBoolean()){
+    m_Intake.setPowerIntake1(() -> -1*firstP.getAsDouble());
+  } else {
+    m_Intake.setPowerIntake1(firstP);
   }
+  if(m_Intake.input()){
+    m_Intake.setPowerIntake2(() -> -.5);
+  }else{
+    m_Intake.setPowerIntake2(() -> 0);
+  }
+
+  SmartDashboard.putBoolean("Pressed", m_Intake.input());
+  // if(isPressed.getAsBoolean()){
+  //   m_Intake.setPowerIntake2(() -> -.3);
+  // } else {
+  //   m_Intake.setPowerIntake2(() -> 0);
+  // }
+  
+  
   }
 
   // Called once the command ends or is interrupted.
