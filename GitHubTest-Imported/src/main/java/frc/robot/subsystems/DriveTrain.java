@@ -10,8 +10,10 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveTrain extends SubsystemBase {
@@ -29,6 +31,8 @@ public class DriveTrain extends SubsystemBase {
 
   private Encoder leftEncoder = new Encoder(1,2);
   private Encoder rightEncoder = new Encoder(3,4);
+
+  private AHRS gyro = new AHRS(Port.kMXP);
   
 
   public void setPower(DoubleSupplier leftP, DoubleSupplier rightP){
@@ -48,6 +52,9 @@ public class DriveTrain extends SubsystemBase {
     rightEncoder.reset();
   }
 
+  public double getAngle(){
+    return gyro.getYaw();
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

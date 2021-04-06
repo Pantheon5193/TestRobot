@@ -24,6 +24,9 @@ public class Intake extends SubsystemBase {
 
   private WPI_VictorSPX Intake1 = new WPI_VictorSPX(4);
   private WPI_VictorSPX Intake2 = new WPI_VictorSPX(1);
+  private WPI_VictorSPX shooterTop = new WPI_VictorSPX(2);
+  private WPI_VictorSPX shooterBottom = new WPI_VictorSPX(3);
+
   private DigitalInput input1 = new DigitalInput(8);
 
   public void setPowerIntake1(DoubleSupplier firstP){
@@ -36,6 +39,11 @@ public class Intake extends SubsystemBase {
 
   public boolean input(){
     return input1.get();
+  }
+
+  public void setPowerShooter(DoubleSupplier thirdP){
+    shooterTop.set(-thirdP.getAsDouble());
+    shooterBottom.set(thirdP.getAsDouble());
   }
 
   @Override

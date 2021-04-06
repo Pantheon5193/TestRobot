@@ -19,6 +19,8 @@ public class JoystickDrive extends CommandBase {
 private DriveTrain m_driveTrain;
 private DoubleSupplier leftP;
 private DoubleSupplier rightP;
+private boolean driveStraightToggle = false;
+private double targetAngle=0;
 
 
 /**
@@ -42,12 +44,27 @@ private DoubleSupplier rightP;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if( (Math.abs(leftP.getAsDouble())>.2) || (Math.abs(rightP.getAsDouble())>.2)){
-      m_driveTrain.setPower(leftP, rightP);
+    if(((Math.abs(leftP.getAsDouble())>.2) && (Math.abs(rightP.getAsDouble())>.2)) && !driveStraightToggle){
+      targetAngle = m_driveTrain.getAngle();
+      driveStraightToggle=true;
+    }else if((Math.abs(leftP.getAsDouble())<.5) && (Math.abs(rightP.getAsDouble())<.5)){
+      driveStraightToggle=false;
+    }
+    if((driveStraightToggle) && (leftP.getAsDouble()>0)){
+      m_driveTrain.setPower(() ->((leftP.getAsDouble()/2)), //+ ((targetAngle - m_driveTrain.getAngle())/90)),
+       () -> (rightP.getAsDouble()/2)); //+ ((targetAngle- m_driveTrain.getAngle())/90));
+
+    }else if((driveStraightToggle) && (leftP.getAsDouble()<0)){
+      m_driveTrain.setPower(() ->(leftP.getAsDouble()/2), //+ ((targetAngle - m_driveTrain.getAngle())/90)),
+       () -> (rightP.getAsDouble()/2));// + ((targetAngle- m_driveTrain.getAngle())/90));
+    }else if(((Math.abs(leftP.getAsDouble())>.2) || (Math.abs((rightP.getAsDouble()))>.2)) && !driveStraightToggle){
+      m_driveTrain.setPower(() -> Math.pow((leftP.getAsDouble()),3), () -> Math.pow((rightP.getAsDouble()),3));
     }else{
       m_driveTrain.setPower(() -> 0,() -> 0);
     }
-    SmartDashboard.putNumber("Front Left", m_driveTrain.getEncoderCount());
+    SmartDashboard.putNumber("Gyro", m_driveTrain.getAngle());
+    SmartDashboard.putBoolean("drive toggle",driveStraightToggle);
+    SmartDashboard.putNumber("target angle", ((targetAngle- m_driveTrain.getAngle())/90));
   }
 
   // Called once the command ends or is interrupted.

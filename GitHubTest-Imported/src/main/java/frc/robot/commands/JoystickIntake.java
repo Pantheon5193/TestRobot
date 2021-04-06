@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -23,6 +24,8 @@ private Intake m_Intake;
 private DoubleSupplier firstP;
 private BooleanSupplier isPressed;
 private BooleanSupplier isPressed2;
+private BooleanSupplier initialPress;
+private Timer timer = new Timer();
 
 
 /**
@@ -30,11 +33,12 @@ private BooleanSupplier isPressed2;
    *
    * @param subsystem The subsystem used by this command.
    */
-  public JoystickIntake(Intake subsystem, DoubleSupplier power1, BooleanSupplier pressed, BooleanSupplier pressed2) {
+  public JoystickIntake(Intake subsystem, DoubleSupplier power1,BooleanSupplier Ahold, BooleanSupplier Bpressed, BooleanSupplier Apressed) {
     m_Intake = subsystem;
     firstP = power1;
-    isPressed=pressed;
-    isPressed2 = pressed2;
+    isPressed=Ahold;
+    isPressed2 = Bpressed;
+    initialPress = Apressed;
     addRequirements(subsystem);
   }
 
@@ -49,20 +53,24 @@ private BooleanSupplier isPressed2;
   if(isPressed2.getAsBoolean()){
     m_Intake.setPowerIntake1(() -> -1*firstP.getAsDouble());
   } else {
-    m_Intake.setPowerIntake1(firstP);
+    m_Intake.setPowerIntake1(() -> firstP.getAsDouble()*.375);
   }
   if(m_Intake.input()){
+    m_Intake.setPowerIntake2(() -> -.3);
+    Timer.delay(.2);
+    m_Intake.setPowerIntake2(() -> 0);
+  }else if(initialPress.getAsBoolean()){
+    m_Intake.setPowerShooter(() -> .85);
+    Timer.delay(1);
+  }else if(isPressed.getAsBoolean()){
     m_Intake.setPowerIntake2(() -> -.5);
   }else{
     m_Intake.setPowerIntake2(() -> 0);
+    m_Intake.setPowerShooter(() -> 0);
   }
 
   SmartDashboard.putBoolean("Pressed", m_Intake.input());
-  // if(isPressed.getAsBoolean()){
-  //   m_Intake.setPowerIntake2(() -> -.3);
-  // } else {
-  //   m_Intake.setPowerIntake2(() -> 0);
-  // }
+  // ds
   
   
   }

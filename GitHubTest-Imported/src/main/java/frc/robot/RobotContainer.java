@@ -49,10 +49,13 @@ public class RobotContainer {
     s_DriveTrain.setDefaultCommand(new JoystickDrive(s_DriveTrain,
     () -> -controller.getY(GenericHID.Hand.kLeft),
     () -> controller.getY(GenericHID.Hand.kRight)));
-    
-    s_Intake.setDefaultCommand(new JoystickIntake(s_Intake, () -> -controller.getTriggerAxis(GenericHID.Hand.kLeft), () -> controller.getAButton(), () -> controller.getBButton()));
+
     s_Shooter.setDefaultCommand(new JoystickShooter(s_Shooter,
-    () -> controller.getTriggerAxis(GenericHID.Hand.kRight)));
+    () -> controller.getTriggerAxis(GenericHID.Hand.kRight), () -> controller.getAButton()));
+    
+    s_Intake.setDefaultCommand(new JoystickIntake(s_Intake, () -> -controller.getTriggerAxis(GenericHID.Hand.kLeft), 
+    () -> controller.getAButton(), () -> controller.getBButton(), () -> controller.getAButtonPressed()));
+
   }
 
   /**

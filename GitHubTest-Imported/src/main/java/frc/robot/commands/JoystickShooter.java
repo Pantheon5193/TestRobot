@@ -12,6 +12,8 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 /**
  * An example command that uses an example subsystem.
@@ -19,6 +21,7 @@ import java.util.function.DoubleSupplier;
 public class JoystickShooter extends CommandBase {
 private Shooter m_Shooter;
 private DoubleSupplier firstP;
+private BooleanSupplier shoot;
 
 
 /**
@@ -26,9 +29,10 @@ private DoubleSupplier firstP;
    *
    * @param subsystem The subsystem used by this command.
    */
-  public JoystickShooter(Shooter subsystem, DoubleSupplier power1) {
+  public JoystickShooter(Shooter subsystem, DoubleSupplier power1, BooleanSupplier APress) {
     m_Shooter = subsystem;
     firstP = power1;
+    shoot = APress;
     addRequirements(subsystem);
   }
 
@@ -40,8 +44,13 @@ private DoubleSupplier firstP;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  m_Shooter.setPowerShooter(firstP);
-  }
+  
+  // if(shoot.getAsBoolean()){
+  //   m_Shooter.setPowerShooter(() ->.5);
+  // }else{
+  //   m_Shooter.setPowerShooter(firstP);
+  // }
+   }
 
   // Called once the command ends or is interrupted.
   @Override
