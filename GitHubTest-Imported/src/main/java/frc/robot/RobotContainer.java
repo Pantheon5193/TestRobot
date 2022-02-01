@@ -7,19 +7,18 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Controller;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.JoystickDrive;
 import frc.robot.commands.JoystickIntake;
-import frc.robot.commands.JoystickShooter;
+import frc.robot.commands.VariableCommand;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -30,14 +29,18 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  XboxController controller = new XboxController(0);
+  XboxController controller2 = new XboxController(2);
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final DriveTrain s_DriveTrain = new DriveTrain();
   private final Intake s_Intake = new Intake();
-  private final Shooter s_Shooter = new Shooter();
-
+  private VariableCommand variableCommand = new VariableCommand(m_exampleSubsystem);
+  private JoystickIntake joystickIntake = new JoystickIntake(s_Intake, controller, variableCommand);
+  private JoystickDrive joystickDrive = new JoystickDrive(s_DriveTrain,
+  () -> -controller.getY(GenericHID.Hand.kLeft),
+  () -> controller.getY(GenericHID.Hand.kRight),variableCommand);
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  XboxController controller = new XboxController(0);
-  XboxController controller2 = new XboxController(2);
+  
 
 
   /**
@@ -46,15 +49,9 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    s_DriveTrain.setDefaultCommand(new JoystickDrive(s_DriveTrain,
-    () -> -controller.getY(GenericHID.Hand.kLeft),
-    () -> controller.getY(GenericHID.Hand.kRight)));
-
-    s_Shooter.setDefaultCommand(new JoystickShooter(s_Shooter,
-    () -> controller.getTriggerAxis(GenericHID.Hand.kRight), () -> controller.getAButton()));
+    s_DriveTrain.setDefaultCommand(joystickDrive);
+    s_Intake.setDefaultCommand(joystickIntake);
     
-    s_Intake.setDefaultCommand(new JoystickIntake(s_Intake, () -> -controller.getTriggerAxis(GenericHID.Hand.kLeft), 
-    () -> controller.getAButton(), () -> controller.getBButton(), () -> controller.getAButtonPressed()));
 
   }
 

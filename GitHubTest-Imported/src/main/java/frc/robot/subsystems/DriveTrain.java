@@ -25,7 +25,6 @@ public class DriveTrain extends SubsystemBase {
 
   private WPI_VictorSPX fL = new WPI_VictorSPX(8);
   private WPI_VictorSPX fR = new WPI_VictorSPX(7);
-
   private WPI_VictorSPX bL = new WPI_VictorSPX(5);
   private WPI_VictorSPX bR = new WPI_VictorSPX(6);
 
@@ -53,7 +52,15 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getAngle(){
-    return gyro.getYaw();
+    return gyro.getAngle();
+  }
+
+  public void resetGyro(){
+    gyro.reset();
+  }
+
+  public void compensateGyro(double error){
+    gyro.setAngleAdjustment(error);
   }
   @Override
   public void periodic() {

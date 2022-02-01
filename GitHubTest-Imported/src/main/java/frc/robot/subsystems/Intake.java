@@ -9,6 +9,8 @@ package frc.robot.subsystems;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -24,10 +26,11 @@ public class Intake extends SubsystemBase {
 
   private WPI_VictorSPX Intake1 = new WPI_VictorSPX(4);
   private WPI_VictorSPX Intake2 = new WPI_VictorSPX(1);
-  private WPI_VictorSPX shooterTop = new WPI_VictorSPX(2);
-  private WPI_VictorSPX shooterBottom = new WPI_VictorSPX(3);
+  private WPI_TalonFX shooterTop = new WPI_TalonFX(2);
+  private WPI_TalonFX shooterBottom = new WPI_TalonFX(3);
 
-  private DigitalInput input1 = new DigitalInput(8);
+  private DigitalInput input1 = new DigitalInput(7);
+  private DigitalInput input2 = new DigitalInput(8);
 
   public void setPowerIntake1(DoubleSupplier firstP){
     Intake1.set(firstP.getAsDouble());
@@ -37,13 +40,21 @@ public class Intake extends SubsystemBase {
     Intake2.set(secondP.getAsDouble());
   }
 
-  public boolean input(){
+  public boolean inputBottom(){
     return input1.get();
   }
 
+  public boolean inputTop(){
+    return input2.get();
+  }
+
   public void setPowerShooter(DoubleSupplier thirdP){
-    shooterTop.set(-thirdP.getAsDouble());
-    shooterBottom.set(thirdP.getAsDouble());
+    shooterTop.set(thirdP.getAsDouble());
+    shooterBottom.set(-thirdP.getAsDouble());
+  }
+
+  public double getRPM(){
+    return shooterTop.get();
   }
 
   @Override

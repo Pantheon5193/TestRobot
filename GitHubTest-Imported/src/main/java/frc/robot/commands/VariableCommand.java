@@ -7,50 +7,40 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
 /**
  * An example command that uses an example subsystem.
  */
-public class JoystickShooter extends CommandBase {
-private Shooter m_Shooter;
-private DoubleSupplier firstP;
-private BooleanSupplier shoot;
-
-
-/**
+public class VariableCommand extends CommandBase {
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+  private final ExampleSubsystem m_subsystem;
+  public double[] seen = new double[2];
+  public boolean fin = true;
+  /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public JoystickShooter(Shooter subsystem, DoubleSupplier power1, BooleanSupplier APress) {
-    m_Shooter = subsystem;
-    firstP = power1;
-    shoot = APress;
+  public VariableCommand(ExampleSubsystem subsystem) {
+    m_subsystem = subsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    seen[0] = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+     
+  } 
   
-  // if(shoot.getAsBoolean()){
-  //   m_Shooter.setPowerShooter(() ->.5);
-  // }else{
-  //   m_Shooter.setPowerShooter(firstP);
-  // }
-   }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -62,4 +52,13 @@ private BooleanSupplier shoot;
   public boolean isFinished() {
     return false;
   }
+  
+  public double[] getSeen(){
+    return seen;
+  }
+
+  public void setSeen(double[] saw){
+    this.seen = saw;
+  }
+  
 }
